@@ -1,6 +1,8 @@
 package com.zsw.demoapplication.fragment.type;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +14,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.zsw.demoapplication.R;
+import com.zsw.demoapplication.activity.VideoActivity;
+import com.zsw.demoapplication.adapter.MyListAdapter;
+import com.zsw.demoapplication.entity.NewsContent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zeng
@@ -54,7 +64,7 @@ public class TabFragment extends Fragment {
             initWebData(url);
         }else if("日语".equals(title)){
             vsWeb.inflate();
-            url="http://music.163.com/#/artist/mv?id=161865&limit=12&offset=0";
+            url="http://music.163.com/m/artist?id=161865&limit=12&offset=12#?thirdfrom=wx";
             initWebData(url);
         }else if("韩语".equals(title)){
             vsWeb.inflate();
@@ -115,7 +125,29 @@ public class TabFragment extends Fragment {
     }
 
     private void initListData() {
-
+        final List<NewsContent> list = new ArrayList<>();
+        list.add(new NewsContent("[生活]苍井空","http://player.youku.com/embed/XMzkyODEyMzY4"));
+        list.add(new NewsContent("[娱乐]美国众女星卷入艳照门 詹妮弗-劳伦斯60张裸照外泄","http://player.youku.com/embed/XNzY3NDE2MDIw"));
+        list.add(new NewsContent("[音乐]Trap Mix 2016 [ Best of Trap Music ]","http://player.youku.com/embed/XMTQ3MDg2MDg3Ng=="));
+        list.add(new NewsContent("[搞笑]试浴室 美女恶搞 2016年11月2周","http://player.youku.com/embed/XMTgxNTY5ODAwOA=="));
+        list.add(new NewsContent("Besame_2008_C_Split_7_1080_高清","http://player.youku.com/embed/XMTcxNzU4NTYwOA=="));
+        list.add(new NewsContent("[拍客]日本性感美女写真002","http://player.youku.com/embed/XMTgzNDg1ODUyNA=="));
+        list.add(new NewsContent("[生活]性感美女","http://player.youku.com/embed/XMTM3ODQxOTEyOA=="));
+        list.add(new NewsContent("[拍客]性感美女背后摇 (114)_标清","http://player.youku.com/embed/XMTU3OTYzNDA5Mg=="));
+        list.add(new NewsContent("[拍客]臀摇","http://player.youku.com/embed/XMTY1NTQ1NDg1Mg=="));
+        list.add(new NewsContent("[拍客]美女牛仔性感紧身热舞","http://player.youku.com/embed/XMTQzMjMyNTE5Ng=="));
+        list.add(new NewsContent("[拍客]妹子身材太好，就是皮裤勒太紧了.","http://player.youku.com/embed/XMTYzNTEyMTYyMA=="));
+        list.add(new NewsContent("[生活]熊猫主播 美女 智敏儿 短裤 网丝 皮裤 舞蹈剪辑 2016 11 26","http://player.youku.com/embed/XMTgzNzM0OTQ4OA=="));
+        ListView listview = (ListView) view.findViewById(R.id.my_listview);
+        listview.setAdapter(new MyListAdapter(list,getActivity()));
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), VideoActivity.class);
+                intent.putExtra("url",list.get(position).getUrl());
+                startActivity(intent);
+            }
+        });
     }
 
 
