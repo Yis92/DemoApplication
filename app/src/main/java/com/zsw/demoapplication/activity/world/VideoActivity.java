@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.zsw.demoapplication.R;
 import com.zsw.demoapplication.base.BaseActivity;
@@ -24,7 +25,9 @@ public class VideoActivity extends BaseActivity {
     private RelativeLayout rlBack;
     private WebView webview;
     private ProgressBar bar;
+    private TextView title;
     private String url = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,12 @@ public class VideoActivity extends BaseActivity {
 
     @Override
     public void initViews() {
+        String strTitle="内容";
         rlBack = findView(R.id.rl_back);
         webview = findView(R.id.webview);
+        title = findView(R.id.tv_title);
         bar = findView(R.id.progressbar);
+        title.setText(getString(R.string.video_title).replace(getString(R.string.video_title),strTitle));
     }
 
     @Override

@@ -25,11 +25,11 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="内 容"
             android:textColor="@color/black"
             android:textSize="18dp" />
     </RelativeLayout>

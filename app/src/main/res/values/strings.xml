@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DemoApplication</string>
+    <string name="video_title">$</string>
 </resources>
