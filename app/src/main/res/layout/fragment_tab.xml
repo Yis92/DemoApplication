@@ -1,20 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!--标题列表-->
-    <ViewStub
-        android:id="@+id/vs_title"
+    <!--&lt;!&ndash;标题列表&ndash;&gt;-->
+    <!--<ViewStub-->
+    <!--android:id="@+id/vs_title"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout="@layout/viewstub_title" />-->
+    <!--&lt;!&ndash;webview&ndash;&gt;-->
+    <!--<ViewStub-->
+    <!--android:id="@+id/vs_web"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout="@layout/viewstub_web" />-->
+    <LinearLayout
+        android:id="@+id/ll_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/viewstub_title" />
-    <!--webview-->
-    <ViewStub
-        android:id="@+id/vs_web"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.zsw.demoapplication.widget.RefreshLayout
+            android:id="@+id/srl_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/my_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/divider_grey_white"
+                android:dividerHeight="1dp"></ListView>
+        </com.zsw.demoapplication.widget.RefreshLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_web"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/viewstub_web" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/myProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <WebView
+            android:id="@+id/my_webview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"></WebView>
+    </LinearLayout>
+
+</FrameLayout>

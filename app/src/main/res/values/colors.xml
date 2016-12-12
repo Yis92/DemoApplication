@@ -8,7 +8,8 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="yellow">#FDFC4A</color>
-    <color name="line_grey_white">#E5E5E5</color>
-    <color name="divider_grey_white">#e0e0e0</color>
+    <color name="line_grey_white">#E9E9E9</color>
+    <color name="divider_grey_white">#e5e5e5</color>
+    <color name="bg_refresh_load">#e0e0e0</color>
 
 </resources>

@@ -2,6 +2,8 @@ package com.zsw.demoapplication.fragment.type;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -19,6 +22,7 @@ import com.zsw.demoapplication.activity.world.VideoActivity;
 import com.zsw.demoapplication.adapter.MyListAdapter;
 import com.zsw.demoapplication.base.BaseFragment;
 import com.zsw.demoapplication.entity.NewsContent;
+import com.zsw.demoapplication.widget.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +37,11 @@ public class TabFragment2 extends BaseFragment {
 
     private String title;
 
-    private ViewStub vsTitle;
-    private ViewStub vsWeb;
-
+    private LinearLayout llTitle;
+    private LinearLayout llWeb;
+    private RefreshLayout mRefreshLayout;
+    private final List<NewsContent> list = new ArrayList<>();
+    private MyListAdapter myListAdapter;
 
     public static TabFragment2 newInstance(String title) {
         TabFragment2 f = new TabFragment2();
@@ -60,38 +66,80 @@ public class TabFragment2 extends BaseFragment {
 
     @Override
     public void initViews() {
-        vsTitle = findView(R.id.vs_title);
-        vsWeb = findView(R.id.vs_web);
+        llTitle = findView(R.id.ll_title);
+        llWeb = findView(R.id.ll_web);
+        mRefreshLayout = findView(R.id.srl_refresh);
+
+        //设置刷新的颜色
+        mRefreshLayout.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light));
+
     }
 
     @Override
     public void initData(Bundle bundle) {
         String url = "";
         if ("华语".equals(title)) {
-            vsWeb.inflate();
+            llWeb.setVisibility(View.VISIBLE);
             url = "http://music.163.com/#/search/m/?id=427145&s=%E8%94%A1%E4%BE%9D%E6%9E%97&type=1004";
             initWebData(url);
         } else if ("欧美".equals(title)) {
-            vsWeb.inflate();
+            llWeb.setVisibility(View.VISIBLE);
             url = "http://music.163.com/#/search/m/?id=46487&s=%E5%B8%83%E5%85%B0%E5%A6%AE&type=1004";
             initWebData(url);
         } else if ("日语".equals(title)) {
-            vsWeb.inflate();
+            llWeb.setVisibility(View.VISIBLE);
             url = "http://music.163.com/m/artist?id=161865&limit=12&offset=12#?thirdfrom=wx";
             initWebData(url);
         } else if ("韩语".equals(title)) {
-            vsWeb.inflate();
+            llWeb.setVisibility(View.VISIBLE);
             url = "http://music.163.com/#/search/m/?id=161865&limit=12&offset=12&s=%E6%9D%8E%E5%AD%9D%E5%88%A9&type=1004";
             initWebData(url);
         } else {
-            vsTitle.inflate();
+            llTitle.setVisibility(View.VISIBLE);
             initListData();
         }
     }
 
     @Override
     public void initEvents() {
-
+        // 设置下拉刷新监听器
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //获得新的数据
+                        list.add(new NewsContent("这是下拉刷新的item", ""));
+                        //更新数据
+                        myListAdapter.notifyDataSetChanged();
+                        //停止刷新动画
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
+        // 设置上拉加载监听器
+        mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                mRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //获得新的数据
+                        list.add(new NewsContent("这是下拉刷新的item", ""));
+                        //更新数据
+                        myListAdapter.notifyDataSetChanged();
+                        // 加载完后调用该方法停止动画
+                        mRefreshLayout.setLoading(false);
+                    }
+                },2000);
+            }
+        });
     }
 
     private void initWebData(String url) {
@@ -140,7 +188,6 @@ public class TabFragment2 extends BaseFragment {
     }
 
     private void initListData() {
-        final List<NewsContent> list = new ArrayList<>();
         list.add(new NewsContent("[生活]苍井空", "http://player.youku.com/embed/XMzkyODEyMzY4"));
         list.add(new NewsContent("[娱乐]美国众女星卷入艳照门 詹妮弗-劳伦斯60张裸照外泄", "http://player.youku.com/embed/XNzY3NDE2MDIw"));
         list.add(new NewsContent("[音乐]Trap Mix 2016 [ Best of Trap Music ]", "http://player.youku.com/embed/XMTQ3MDg2MDg3Ng=="));
@@ -155,7 +202,8 @@ public class TabFragment2 extends BaseFragment {
         list.add(new NewsContent("[拍客]妹子身材太好，就是皮裤勒太紧了.", "http://player.youku.com/embed/XMTYzNTEyMTYyMA=="));
         list.add(new NewsContent("[生活]熊猫主播 美女 智敏儿 短裤 网丝 皮裤 舞蹈剪辑 2016 11 26", "http://player.youku.com/embed/XMTgzNzM0OTQ4OA=="));
         ListView listview = (ListView) view.findViewById(R.id.my_listview);
-        listview.setAdapter(new MyListAdapter(list, getActivity()));
+        myListAdapter = new MyListAdapter(list, getActivity());
+        listview.setAdapter(myListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -164,7 +212,7 @@ public class TabFragment2 extends BaseFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("url", videoUrl);
                     startActivity(VideoActivity.class, bundle);
-                }else {
+                } else {
                     showToast("这是广告。。");
                 }
             }
