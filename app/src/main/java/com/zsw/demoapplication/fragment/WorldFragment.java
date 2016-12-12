@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.zsw.demoapplication.R;
 import com.zsw.demoapplication.adapter.TabAdapter;
-import com.zsw.demoapplication.fragment.type.TabFragment;
+import com.zsw.demoapplication.fragment.type.TabFragment2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class WorldFragment extends Fragment {
         //设置viewPager内容的集合
         List<Fragment> list_fragment = new ArrayList<>();
         for(int i = 0;i<size;i++){
-            list_fragment.add(new TabFragment().newInstance(list_title.get(i)));
+            list_fragment.add(new TabFragment2().newInstance(list_title.get(i)));
         }
         tabAdapter = new TabAdapter(getChildFragmentManager(),list_fragment,list_title);
         viewPager.setAdapter(tabAdapter);       //将viewPager与Adapter关联

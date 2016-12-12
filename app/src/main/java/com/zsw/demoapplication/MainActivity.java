@@ -12,6 +12,7 @@ import com.zsw.demoapplication.fragment.ResourceFragment;
 import com.zsw.demoapplication.fragment.WorldFragment;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+
     private FrameLayout container;
     private RadioGroup group;
     private RadioButton world;
