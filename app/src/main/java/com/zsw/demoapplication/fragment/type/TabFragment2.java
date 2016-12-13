@@ -59,14 +59,14 @@ public class TabFragment2 extends BaseFragment {
     public void initViews() {
         mRefreshLayout = findView(R.id.srl_refresh);
         listview = findView(R.id.my_listview);
-        //设置下拉进度的背景颜色，默认就是白色的
-        mRefreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.white));
-        //设置下拉进度的主题颜色
-        mRefreshLayout.setColorSchemeColors(
-                getResources().getColor(android.R.color.holo_blue_bright),
-                getResources().getColor(android.R.color.holo_green_light),
-                getResources().getColor(android.R.color.holo_orange_light),
-                getResources().getColor(android.R.color.holo_red_light));
+//        //设置下拉进度的背景颜色，默认就是白色的
+//        mRefreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.white));
+//        //设置下拉进度的主题颜色
+//        mRefreshLayout.setColorSchemeColors(
+//                getResources().getColor(android.R.color.holo_blue_bright),
+//                getResources().getColor(android.R.color.holo_green_light),
+//                getResources().getColor(android.R.color.holo_orange_light),
+//                getResources().getColor(android.R.color.holo_red_light));
 
     }
 

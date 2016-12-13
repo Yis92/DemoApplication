@@ -36,15 +36,20 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:24.2.0'
     //框架包
-    compile 'com.jubao:android-common:1.1.0@aar'//核心包
-    compile 'com.jubao:android-http-session:1.0.1@aar'//httpclient包
+    compile 'com.jubao:android-common:1.1.0@aar'
+    //核心包
+    compile 'com.jubao:android-http-session:1.0.1@aar'
+    //httpclient包
     compile 'com.loopj.android:android-async-http:1.4.8'
-    compile 'com.jubao:android-common-dialog:1.0.1@aar'//dialog提示
-    compile 'com.squareup.okhttp:okhttp:2.4.0'//okhttp包
+    compile 'com.jubao:android-common-dialog:1.0.1@aar'
+    //dialog提示
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    //okhttp包
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'com.google.code.gson:gson:2.6'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'//imageload图片加载库
-    compile 'com.facebook.fresco:fresco:0.12.0'//facebook图片加载库fresco
-
-
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    //imageload图片加载库
+    compile 'com.facebook.fresco:fresco:0.12.0'
+    //facebook图片加载库fresco
+    compile files('libs/Baidu_MobAds_SDK.jar')
 }

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">DemoApplication</string>
-    <string name="video_title">$</string>
+    <string name="video_title">内 容</string>
+    <string name="resource_title">资 源</string>
     <string name="load">加载中</string>
 </resources>

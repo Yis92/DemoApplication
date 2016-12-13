@@ -63,7 +63,7 @@ public class VideoActivity extends BaseActivity {
         webview = findView(R.id.webview);
         title = findView(R.id.tv_title);
         bar = findView(R.id.progressbar);
-        title.setText(getString(R.string.video_title).replace(getString(R.string.video_title),strTitle));
+        title.setText(getString(R.string.video_title));
     }
 
     @Override

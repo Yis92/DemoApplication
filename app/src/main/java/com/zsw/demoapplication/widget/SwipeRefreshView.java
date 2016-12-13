@@ -34,10 +34,22 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
         super(context, attrs);
         // 填充底部加载布局
         mFooterView = View.inflate(context, R.layout.view_footer, null);
+        initStyle();
 
         // 表示控件移动的最小距离，手移动的距离大于这个距离才能拖动控件
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         Log.e("qqq","====" + mScaledTouchSlop);
+    }
+
+    private void initStyle() {
+        //设置下拉进度的背景颜色，默认就是白色的
+        this.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.white));
+        //设置下拉进度的主题颜色
+        this.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light));
     }
 
     @Override
