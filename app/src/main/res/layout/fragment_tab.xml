@@ -15,14 +15,8 @@
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
     <!--android:layout="@layout/viewstub_web" />-->
-    <LinearLayout
-        android:id="@+id/ll_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
 
-        <com.zsw.demoapplication.widget.RefreshLayout
+        <com.zsw.demoapplication.widget.SwipeRefreshView
             android:id="@+id/srl_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -33,30 +27,6 @@
                 android:layout_height="wrap_content"
                 android:divider="@color/divider_grey_white"
                 android:dividerHeight="1dp"></ListView>
-        </com.zsw.demoapplication.widget.RefreshLayout>
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/ll_web"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:id="@+id/myProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
-
-        <WebView
-            android:id="@+id/my_webview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"></WebView>
-    </LinearLayout>
-
+        </com.zsw.demoapplication.widget.SwipeRefreshView>
+    
 </FrameLayout>

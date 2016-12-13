@@ -1,28 +1,20 @@
 package com.zsw.demoapplication.fragment.type;
 
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.zsw.demoapplication.R;
 import com.zsw.demoapplication.activity.world.VideoActivity;
 import com.zsw.demoapplication.adapter.MyListAdapter;
 import com.zsw.demoapplication.base.BaseFragment;
 import com.zsw.demoapplication.entity.NewsContent;
-import com.zsw.demoapplication.widget.RefreshLayout;
+import com.zsw.demoapplication.widget.SwipeRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +29,10 @@ public class TabFragment2 extends BaseFragment {
 
     private String title;
 
-    private LinearLayout llTitle;
-    private LinearLayout llWeb;
-    private RefreshLayout mRefreshLayout;
+    private SwipeRefreshView mRefreshLayout;
     private final List<NewsContent> list = new ArrayList<>();
     private MyListAdapter myListAdapter;
+    private ListView listview ;
 
     public static TabFragment2 newInstance(String title) {
         TabFragment2 f = new TabFragment2();
@@ -66,11 +57,11 @@ public class TabFragment2 extends BaseFragment {
 
     @Override
     public void initViews() {
-        llTitle = findView(R.id.ll_title);
-        llWeb = findView(R.id.ll_web);
         mRefreshLayout = findView(R.id.srl_refresh);
-
-        //设置刷新的颜色
+        listview = findView(R.id.my_listview);
+        //设置下拉进度的背景颜色，默认就是白色的
+        mRefreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.white));
+        //设置下拉进度的主题颜色
         mRefreshLayout.setColorSchemeColors(
                 getResources().getColor(android.R.color.holo_blue_bright),
                 getResources().getColor(android.R.color.holo_green_light),
@@ -83,111 +74,115 @@ public class TabFragment2 extends BaseFragment {
     public void initData(Bundle bundle) {
         String url = "";
         if ("华语".equals(title)) {
-            llWeb.setVisibility(View.VISIBLE);
-            url = "http://music.163.com/#/search/m/?id=427145&s=%E8%94%A1%E4%BE%9D%E6%9E%97&type=1004";
-            initWebData(url);
+            //传递华语的请求参数，访问后台接口
+            initListData();
         } else if ("欧美".equals(title)) {
-            llWeb.setVisibility(View.VISIBLE);
-            url = "http://music.163.com/#/search/m/?id=46487&s=%E5%B8%83%E5%85%B0%E5%A6%AE&type=1004";
-            initWebData(url);
+            //传递欧美的请求参数，访问后台接口
+            initListData();
         } else if ("日语".equals(title)) {
-            llWeb.setVisibility(View.VISIBLE);
-            url = "http://music.163.com/m/artist?id=161865&limit=12&offset=12#?thirdfrom=wx";
-            initWebData(url);
+            //传递日语的请求参数，访问后台接口
+            initListData();
         } else if ("韩语".equals(title)) {
-            llWeb.setVisibility(View.VISIBLE);
-            url = "http://music.163.com/#/search/m/?id=161865&limit=12&offset=12&s=%E6%9D%8E%E5%AD%9D%E5%88%A9&type=1004";
-            initWebData(url);
+            //传递韩语的请求参数，访问后台接口
+            initListData();
         } else {
-            llTitle.setVisibility(View.VISIBLE);
             initListData();
         }
     }
 
     @Override
     public void initEvents() {
-        // 设置下拉刷新监听器
+        // 下拉时触发SwipeRefreshLayout的下拉动画，动画完毕之后就会回调这个方法
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                // 开始刷新，设置当前为刷新状态
+                //swipeRefreshLayout.setRefreshing(true);
+
+                // 这里是主线程
+                // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
+                // TODO 获取数据
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //获得新的数据
-                        list.add(new NewsContent("这是下拉刷新的item", ""));
+                        list.add(new NewsContent("这是下拉刷新的item0", ""));
                         //更新数据
                         myListAdapter.notifyDataSetChanged();
-                        //停止刷新动画
+                        // 加载完数据设置为不刷新状态，将下拉进度收起来
                         mRefreshLayout.setRefreshing(false);
                     }
                 }, 2000);
             }
         });
-        // 设置上拉加载监听器
-        mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+        // 设置上拉加载更多
+        mRefreshLayout.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
             @Override
             public void onLoad() {
-                mRefreshLayout.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //获得新的数据
-                        list.add(new NewsContent("这是下拉刷新的item", ""));
+                        list.add(new NewsContent("这是上拉加载的item1", ""));
                         //更新数据
                         myListAdapter.notifyDataSetChanged();
-                        // 加载完后调用该方法停止动画
+                        // 加载完数据设置为不刷新状态，将下拉进度收起来
                         mRefreshLayout.setLoading(false);
                     }
-                },2000);
+                }, 2000);
             }
         });
     }
 
-    private void initWebData(String url) {
-        WebView webview = (WebView) view.findViewById(R.id.my_webview);
-        final ProgressBar bar = (ProgressBar) view.findViewById(R.id.myProgressBar);
-        WebSettings webset = webview.getSettings();
-        //设置WebView属性，能够执行Javascript脚本
-        webset.setJavaScriptEnabled(true);
-        // 设置可以支持缩放
-        webset.setSupportZoom(true);
-        // 设置出现缩放工具
-        webset.setBuiltInZoomControls(true);
-        //不显示缩小镜和放大镜按钮
-        webset.setDisplayZoomControls(false);
-        //扩大比例的缩放
-        webset.setUseWideViewPort(true);
-        //自适应屏幕
-        webset.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webset.setLoadWithOverviewMode(true);
-        //当页面中点击链接时，会调用这个方法
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-        //显示进度条
-        webview.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    bar.setVisibility(View.GONE);
-                } else {
-                    if (View.GONE == bar.getVisibility()) {
-                        bar.setVisibility(View.VISIBLE);
-                    }
-                    bar.setProgress(newProgress);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-
-        });
-        //加载需要显示的网页
-        webview.loadUrl(url);
-    }
+//    private void initWebData(String url) {
+//        WebView webview = (WebView) view.findViewById(R.id.my_webview);
+//        final ProgressBar bar = (ProgressBar) view.findViewById(R.id.myProgressBar);
+//        WebSettings webset = webview.getSettings();
+//        //设置WebView属性，能够执行Javascript脚本
+//        webset.setJavaScriptEnabled(true);
+//        // 设置可以支持缩放
+//        webset.setSupportZoom(true);
+//        // 设置出现缩放工具
+//        webset.setBuiltInZoomControls(true);
+//        //不显示缩小镜和放大镜按钮
+//        webset.setDisplayZoomControls(false);
+//        //扩大比例的缩放
+//        webset.setUseWideViewPort(true);
+//        //自适应屏幕
+//        webset.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//        webset.setLoadWithOverviewMode(true);
+//        //当页面中点击链接时，会调用这个方法
+//        webview.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                view.loadUrl(url);
+//                return true;
+//            }
+//        });
+//        //显示进度条
+//        webview.setWebChromeClient(new WebChromeClient() {
+//            @Override
+//            public void onProgressChanged(WebView view, int newProgress) {
+//                if (newProgress == 100) {
+//                    bar.setVisibility(View.GONE);
+//                } else {
+//                    if (View.GONE == bar.getVisibility()) {
+//                        bar.setVisibility(View.VISIBLE);
+//                    }
+//                    bar.setProgress(newProgress);
+//                }
+//                super.onProgressChanged(view, newProgress);
+//            }
+//
+//        });
+//        //加载需要显示的网页
+//        webview.loadUrl(url);
+//    }
 
     private void initListData() {
+        list.clear();
         list.add(new NewsContent("[生活]苍井空", "http://player.youku.com/embed/XMzkyODEyMzY4"));
         list.add(new NewsContent("[娱乐]美国众女星卷入艳照门 詹妮弗-劳伦斯60张裸照外泄", "http://player.youku.com/embed/XNzY3NDE2MDIw"));
         list.add(new NewsContent("[音乐]Trap Mix 2016 [ Best of Trap Music ]", "http://player.youku.com/embed/XMTQ3MDg2MDg3Ng=="));
@@ -201,7 +196,7 @@ public class TabFragment2 extends BaseFragment {
         list.add(new NewsContent("[拍客]美女牛仔性感紧身热舞", "http://player.youku.com/embed/XMTQzMjMyNTE5Ng=="));
         list.add(new NewsContent("[拍客]妹子身材太好，就是皮裤勒太紧了.", "http://player.youku.com/embed/XMTYzNTEyMTYyMA=="));
         list.add(new NewsContent("[生活]熊猫主播 美女 智敏儿 短裤 网丝 皮裤 舞蹈剪辑 2016 11 26", "http://player.youku.com/embed/XMTgzNzM0OTQ4OA=="));
-        ListView listview = (ListView) view.findViewById(R.id.my_listview);
+
         myListAdapter = new MyListAdapter(list, getActivity());
         listview.setAdapter(myListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -218,6 +213,7 @@ public class TabFragment2 extends BaseFragment {
             }
         });
     }
+
 
     @Override
     public Class<?> getClazz() {
