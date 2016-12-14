@@ -14,6 +14,7 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobads.AdViewListener;
 import com.baidu.mobads.AppActivity;
 import com.zsw.demoapplication.R;
+import com.zsw.demoapplication.constant.Constant;
 import com.zsw.demoapplication.entity.NewsContent;
 
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ public class ResourceListAdapter extends BaseAdapter {
     private List<NewsContent> list;
     private LayoutInflater mInflater;
     private Context context;
+
 
     public ResourceListAdapter(List<NewsContent> list, Context context) {
         this.list = list;
@@ -67,16 +69,9 @@ public class ResourceListAdapter extends BaseAdapter {
         return view;
     }
     private void initAds(LinearLayout view) {
-        //人群属性
-        AdSettings.setKey(new String[]{"baidu", "中国"});
         //创建广告view
-        String adPlaceID = "3107650";//重要：请填上你的代码位ID,否则无法请求到广告
-        AdView adView= new AdView(context, adPlaceID);
-        // 设置'广告着陆页'颜色主题
-        AppActivity.setActionBarColorTheme(AppActivity.ActionBarColorTheme.ACTION_BAR_WHITE_THEME);
-        // 另外，也可设置劢作栏中单个元素的颜色, 颜色参数为四段制，0xFF(透明度, 一般填FF)DE(红) DA(绿) DB(蓝)
-        AppActivity.getActionBarColorTheme().setBackgroundColor(
-                0xFFDEDADB);
+        //重要：请填上你的代码位ID,否则无法请求到广告
+        AdView adView= new AdView(context, Constant.BAIDU_ADPLACEID);
 
         //设置监听器
         adView.setListener(new AdViewListener() {

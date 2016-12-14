@@ -17,6 +17,7 @@ import com.zsw.demoapplication.entity.NewsContent;
 import com.zsw.demoapplication.widget.SwipeRefreshView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class TabFragment2 extends BaseFragment {
     private String title;
 
     private SwipeRefreshView mRefreshLayout;
-    private final List<NewsContent> list = new ArrayList<>();
+    private final LinkedList<NewsContent> list = new LinkedList<>();
     private MyListAdapter myListAdapter;
     private ListView listview ;
 
@@ -195,8 +196,11 @@ public class TabFragment2 extends BaseFragment {
         list.add(new NewsContent("[拍客]臀摇", "http://player.youku.com/embed/XMTY1NTQ1NDg1Mg=="));
         list.add(new NewsContent("[拍客]美女牛仔性感紧身热舞", "http://player.youku.com/embed/XMTQzMjMyNTE5Ng=="));
         list.add(new NewsContent("[拍客]妹子身材太好，就是皮裤勒太紧了.", "http://player.youku.com/embed/XMTYzNTEyMTYyMA=="));
-        list.add(new NewsContent("[生活]熊猫主播 美女 智敏儿 短裤 网丝 皮裤 舞蹈剪辑 2016 11 26", "http://player.youku.com/embed/XMTgzNzM0OTQ4OA=="));
-
+//        list.add(new NewsContent("[生活]熊猫主播 美女 智敏儿 短裤 网丝 皮裤 舞蹈剪辑 2016 11 26", "http://player.youku.com/embed/XMTgzNzM0OTQ4OA=="));
+        //加两条广告
+        int position = (list.size()+2)/2;
+        list.add(position,null);
+        list.addLast(null);
         myListAdapter = new MyListAdapter(list, getActivity());
         listview.setAdapter(myListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

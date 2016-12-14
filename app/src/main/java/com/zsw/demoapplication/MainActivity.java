@@ -4,6 +4,8 @@ package com.zsw.demoapplication;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -16,8 +18,13 @@ import com.baidu.mobads.AdSettings;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AdViewListener;
 import com.baidu.mobads.AppActivity;
+import com.zsw.demoapplication.constant.Constant;
 import com.zsw.demoapplication.fragment.ResourceFragment;
 import com.zsw.demoapplication.fragment.WorldFragment;
+
+import net.youmi.android.AdManager;
+import net.youmi.android.normal.banner.BannerManager;
+import net.youmi.android.normal.banner.BannerViewListener;
 
 import org.json.JSONObject;
 
@@ -35,12 +42,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //有米广告初始化
+        AdManager.getInstance(this).init(Constant.YOUMI_APP_ID,Constant.YOUMI_APP_SECRET, true, true);
         initView();
         initData();
         initEvent();
     }
-
-
 
 
     private void initView() {
@@ -107,5 +114,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
         transaction.commit();
     }
+
+
 }
 

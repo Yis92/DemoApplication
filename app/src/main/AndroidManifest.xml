@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zsw.demoapplication">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 
     <application
@@ -17,7 +18,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
-        <meta-data android:name="BaiduMobAd_APP_ID" android:value="a569367c" />
+        <meta-data
+            android:name="BaiduMobAd_APP_ID"
+            android:value="a569367c" />
+        <!--有米的渠道号-->
+        <!--<meta-data-->
+            <!--android:name="YOUMI_CHANNEL"-->
+            <!--android:value="这里替换为非负整数的渠道号"></meta-data>-->
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +34,27 @@
             </intent-filter>
         </activity>
         <!--<activity android:name=".activity.VideoActivity"-->
-            <!--android:exported="false"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:screenOrientation="portrait"/>-->
-        <activity android:name=".activity.world.VideoActivity"/>
+        <!--android:exported="false"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:screenOrientation="portrait"/>-->
+        <activity android:name=".activity.world.VideoActivity" />
+        <!--有米广告需要的组件-->
+        <activity
+            android:name="net.youmi.android.AdBrowser"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <service
+            android:name="net.youmi.android.AdService"
+            android:exported="false" >
+        </service>
+        <receiver
+            android:name="net.youmi.android.AdReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
