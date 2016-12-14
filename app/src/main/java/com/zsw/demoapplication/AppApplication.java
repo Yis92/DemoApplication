@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Process;
 import android.util.Log;
 
+import com.baidu.mobads.AdSettings;
+import com.baidu.mobads.AdView;
+import com.baidu.mobads.AppActivity;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.http.session.HttpSession;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -14,6 +17,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.zsw.demoapplication.constant.Constant;
+
+import net.youmi.android.AdManager;
 
 import java.io.File;
 import java.util.List;
@@ -34,6 +39,8 @@ public class AppApplication extends Application {
     // user your appid the key.
     private static final String APP_KEY = "5741747965052";
 
+
+
     // 此TAG在adb logcat中检索自己所需要的信息， 只需在命令行终端输入 adb logcat | grep
     // com.xiaomi.mipushdemo
     public static final String TAG = "com.zhixiao";
@@ -43,8 +50,10 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+
         Fresco.initialize(context);
         initImageLoader(context);
+        initBaiduAds();
         Config.PREFERENCE_NAME = Constant.WAIBAO_SHOW;
     }
 
@@ -106,4 +115,18 @@ public class AppApplication extends Application {
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }
+
+    /**
+     * 初始化百度广告
+     */
+    public void initBaiduAds(){
+        //人群属性
+        AdSettings.setKey(new String[]{"baidu", "中国"});
+        // 设置'广告着陆页'颜色主题
+        AppActivity.setActionBarColorTheme(AppActivity.ActionBarColorTheme.ACTION_BAR_WHITE_THEME);
+        // 另外，也可设置劢作栏中单个元素的颜色, 颜色参数为四段制，0xFF(透明度, 一般填FF)DE(红) DA(绿) DB(蓝)
+        AppActivity.getActionBarColorTheme().setBackgroundColor(
+                0xFFDEDADB);
+    }
+
 }
