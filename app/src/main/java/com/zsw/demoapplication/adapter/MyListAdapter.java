@@ -1,17 +1,25 @@
 package com.zsw.demoapplication.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zsw.demoapplication.R;
+import com.zsw.demoapplication.activity.world.VideoActivity;
 import com.zsw.demoapplication.entity.NewsContent;
+import com.zsw.demoapplication.http.entity.IndexVideoTitleResp;
 
 import java.util.List;
+
+import cn.trinea.android.common.adapter.CommonAdapter;
 
 /**
  * @author zeng
@@ -19,42 +27,40 @@ import java.util.List;
  * @Description:
  */
 
-public class MyListAdapter extends BaseAdapter {
-    private List<NewsContent> list;
-    private LayoutInflater mInflater;
-    private Context context;
+public class MyListAdapter extends CommonAdapter<IndexVideoTitleResp> {
 
-    public MyListAdapter(List<NewsContent> list, Context context) {
-        this.list = list;
-        this.context = context;
-        this.mInflater =LayoutInflater.from(context);
+    private TextView tvTitle;
+    private LinearLayout llContent;
+
+    public MyListAdapter(Activity activity, List<IndexVideoTitleResp> list) {
+        super(activity, list);
     }
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = null;
-        if (convertView != null) {
-            view = convertView;
-        } else {
-            view = mInflater.inflate(R.layout.item_news, parent, false);
+        if (convertView == null) {
+            convertView = layoutInflater.inflate(R.layout.item_news, parent, false);
         }
-        TextView textView = (TextView) view.findViewById(R.id.news_title);
-        textView.setText(list.get(position).getTitle());
-        return view;
+
+        tvTitle = get(convertView, R.id.news_title);
+        llContent = get(convertView, R.id.ll_content);
+
+        tvTitle.setText(list.get(position).getCoTitle());
+
+        llContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String videoUrl = list.get(position).getCoUrl();
+                if (isNotEmpty(videoUrl)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", videoUrl);
+                    startActivity(VideoActivity.class, bundle);
+                } else {
+                    showToast("这是广告。。");
+                }
+            }
+        });
+        return convertView;
     }
 }

@@ -87,6 +87,7 @@ public class VideoActivity extends BaseActivity {
 
             // 设置WebChromeClient，以支持运行特殊的Javascript
             webview.setWebChromeClient(new WebChromeClient() {
+
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     bar.setProgress(newProgress);

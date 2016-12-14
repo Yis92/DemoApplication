@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.zsw.demoapplication.http.entity.IndexChannelResp;
+
 import java.util.List;
 
 /**
@@ -13,9 +15,9 @@ import java.util.List;
  */
 public class TabAdapter extends FragmentPagerAdapter{
     private List<Fragment> list;
-    private List<String> titile_list;
+    private List<IndexChannelResp> titile_list;
 
-    public TabAdapter(FragmentManager fm, List<Fragment> list, List<String> titile_list) {
+    public TabAdapter(FragmentManager fm, List<Fragment> list, List<IndexChannelResp> titile_list) {
         super(fm);
         this.list = list;
         this.titile_list = titile_list;
@@ -34,6 +36,6 @@ public class TabAdapter extends FragmentPagerAdapter{
     //添加页卡的标题
     @Override
     public CharSequence getPageTitle(int position) {
-        return titile_list.get(position);
+        return titile_list.get(position).getSeName();
     }
 }
