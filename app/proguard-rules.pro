@@ -18,3 +18,6 @@
 -keep class com.baidu.** {
  public protected *;
  }
+ -keep public class android.support.**{
+     *;
+ }
