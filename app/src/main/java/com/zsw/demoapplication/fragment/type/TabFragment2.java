@@ -24,6 +24,7 @@ import com.zsw.demoapplication.widget.SwipeRefreshView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,9 +38,14 @@ public class TabFragment2 extends BaseFragment {
     private String title;
 
     private SwipeRefreshView mRefreshLayout;
-    private List<NewsContent> list;
+    private LinkedList<IndexVideoTitleResp> list = new LinkedList();
     private MyListAdapter myListAdapter;
     private ListView listview;
+    private int type;
+    private static final int FIRST = 100;
+    private static final int REFRESH = 101;
+    private static final int LOAD = 102;
+
 
     public static TabFragment2 newInstance(String title) {
         TabFragment2 f = new TabFragment2();
@@ -82,8 +88,8 @@ public class TabFragment2 extends BaseFragment {
 
         //获取导航栏的参数
         bundle = getArguments();
-        int type = bundle.getInt("type");
-        httpVideoTitle(type);
+        type = bundle.getInt("type");
+        httpVideoTitle(type, FIRST);
 
 //        String url = "";
 //        if ("华语".equals(title)) {
@@ -109,42 +115,19 @@ public class TabFragment2 extends BaseFragment {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 // 开始刷新，设置当前为刷新状态
                 //swipeRefreshLayout.setRefreshing(true);
-
                 // 这里是主线程
                 // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
                 // TODO 获取数据
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //获得新的数据
-                        list.add(new NewsContent("这是下拉刷新的item0", ""));
-                        //更新数据
-                        myListAdapter.notifyDataSetChanged();
-                        // 加载完数据设置为不刷新状态，将下拉进度收起来
-                        mRefreshLayout.setRefreshing(false);
-                    }
-                }, 2000);
+                httpVideoTitle(type, REFRESH);
             }
         });
         // 设置上拉加载更多
         mRefreshLayout.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
             @Override
             public void onLoad() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //获得新的数据
-                        list.add(new NewsContent("这是上拉加载的item1", ""));
-                        //更新数据
-                        myListAdapter.notifyDataSetChanged();
-                        // 加载完数据设置为不刷新状态，将下拉进度收起来
-                        mRefreshLayout.setLoading(false);
-                    }
-                }, 2000);
+                httpVideoTitle(type, LOAD);
             }
         });
     }
@@ -232,7 +215,7 @@ public class TabFragment2 extends BaseFragment {
      *
      * @param type 栏目ID
      */
-    public void httpVideoTitle(int type) {
+    public void httpVideoTitle(int type, final int requestType) {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("type", type + "");
@@ -246,8 +229,23 @@ public class TabFragment2 extends BaseFragment {
             @Override
             public void onResponse(final IndexVideoTitleResp response) {
                 if (response.getCode() == 0) {
-                    myListAdapter = new MyListAdapter(getActivity(), response.getData());
-                    listview.setAdapter(myListAdapter);
+                    switch (requestType) {
+                        case FIRST:
+                            list.addAll(response.getData());
+                            myListAdapter = new MyListAdapter(getActivity(), list);
+                            listview.setAdapter(myListAdapter);
+                            break;
+                        case REFRESH:
+                            list.addAll(0, response.getData());
+                            myListAdapter.notifyDataSetChanged();
+                            mRefreshLayout.setRefreshing(false);
+                            break;
+                        case LOAD:
+                            list.addAll(response.getData());
+                            myListAdapter.notifyDataSetChanged();
+                            mRefreshLayout.setLoading(false);
+                            break;
+                    }
 
                 }
             }

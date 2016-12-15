@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //有米广告初始化
-        AdManager.getInstance(this).init(Constant.YOUMI_APP_ID,Constant.YOUMI_APP_SECRET, true, true);
+        AdManager.getInstance(this).init(Constant.YOUMI_APP_ID,Constant.YOUMI_APP_SECRET, false, true);
         initView();
         initData();
         initEvent();
