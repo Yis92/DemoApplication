@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.Request;
 import com.zsw.demoapplication.R;
@@ -45,6 +46,8 @@ public class TabFragment2 extends BaseFragment {
     private static final int FIRST = 100;
     private static final int REFRESH = 101;
     private static final int LOAD = 102;
+    private final int pageSize = 20;//20条数据一页
+    private int pageNo = 1;//第几页（页码）
 
 
     public static TabFragment2 newInstance(String title) {
@@ -116,10 +119,10 @@ public class TabFragment2 extends BaseFragment {
             @Override
             public void onRefresh() {
                 // 开始刷新，设置当前为刷新状态
-                //swipeRefreshLayout.setRefreshing(true);
                 // 这里是主线程
                 // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
                 // TODO 获取数据
+                pageNo = 1;
                 httpVideoTitle(type, REFRESH);
             }
         });
@@ -127,6 +130,7 @@ public class TabFragment2 extends BaseFragment {
         mRefreshLayout.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
             @Override
             public void onLoad() {
+                pageNo++;
                 httpVideoTitle(type, LOAD);
             }
         });
@@ -219,6 +223,8 @@ public class TabFragment2 extends BaseFragment {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("type", type + "");
+        map.put("pageNo", pageNo + "");
+        map.put("pageSize", pageSize + "");
 
         HttpManager.postAsyn(HttpConstant.VIDEO_TITLE, new HttpManager.ResultCallback<IndexVideoTitleResp>() {
             @Override
@@ -229,6 +235,7 @@ public class TabFragment2 extends BaseFragment {
             @Override
             public void onResponse(final IndexVideoTitleResp response) {
                 if (response.getCode() == 0) {
+
                     switch (requestType) {
                         case FIRST:
                             list.addAll(response.getData());
@@ -236,13 +243,19 @@ public class TabFragment2 extends BaseFragment {
                             listview.setAdapter(myListAdapter);
                             break;
                         case REFRESH:
-                            list.addAll(0, response.getData());
+                            list.clear();
+                            list.addAll(response.getData());
                             myListAdapter.notifyDataSetChanged();
                             mRefreshLayout.setRefreshing(false);
                             break;
                         case LOAD:
-                            list.addAll(response.getData());
-                            myListAdapter.notifyDataSetChanged();
+                            Log.e("qqq",pageNo +"");
+                            if(response.getData()==null||response.getData().size()==0){
+                                Toast.makeText(activity,"没有更多啦",Toast.LENGTH_SHORT).show();
+                            }else{
+                                list.addAll(response.getData());
+                                myListAdapter.notifyDataSetChanged();
+                            }
                             mRefreshLayout.setLoading(false);
                             break;
                     }
