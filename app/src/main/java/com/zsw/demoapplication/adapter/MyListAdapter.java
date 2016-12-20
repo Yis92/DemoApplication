@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.utils.L;
 import com.zsw.demoapplication.R;
+import com.zsw.demoapplication.activity.world.ResourceDetailActivity;
 import com.zsw.demoapplication.activity.world.VideoActivity;
 import com.zsw.demoapplication.entity.NewsContent;
 import com.zsw.demoapplication.http.entity.IndexVideoTitleResp;
@@ -49,11 +50,11 @@ public class MyListAdapter extends CommonAdapter<IndexVideoTitleResp> {
 
         tvTitle = get(convertView, R.id.news_title);
         llContent = get(convertView, R.id.ll_content);
-        if (list.get(position)==null) {
+        if (list.get(position) == null) {
             //表示这里插入一条广告
             llContent.setBackgroundColor(getRes().getColor(R.color.red));
 //            setupBannerAd(llContent);
-        }else{
+        } else {
             tvTitle.setVisibility(View.VISIBLE);
             String title = list.get(position).getCoTitle();
             tvTitle.setText(title);
@@ -68,7 +69,7 @@ public class MyListAdapter extends CommonAdapter<IndexVideoTitleResp> {
                     bundle.putString("url", list.get(position).getCoUrl());
                     startActivity(VideoActivity.class, bundle);
                 } else {
-                    showToast("这是广告。。");
+//                    showToast("这是广告。。");
                 }
             }
         });

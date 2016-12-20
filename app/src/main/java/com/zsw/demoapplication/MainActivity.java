@@ -18,6 +18,7 @@ import com.baidu.mobads.AdSettings;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AdViewListener;
 import com.baidu.mobads.AppActivity;
+import com.umeng.analytics.MobclickAgent;
 import com.zsw.demoapplication.constant.Constant;
 import com.zsw.demoapplication.fragment.ResourceFragment;
 import com.zsw.demoapplication.fragment.WorldFragment;
@@ -47,6 +48,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         initView();
         initData();
         initEvent();
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 

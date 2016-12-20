@@ -16,7 +16,7 @@
         android:textColor="@color/white"
         android:textSize="18dp" />
 
-    <com.zsw.demoapplication.widget.SwipeRefreshView
+    <com.zsw.demoapplication.widget.SuperRefreshLayout
         android:id="@+id/srl_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:divider="@color/divider_grey_white"
             android:dividerHeight="1dp"></ListView>
-    </com.zsw.demoapplication.widget.SwipeRefreshView>
+    </com.zsw.demoapplication.widget.SuperRefreshLayout>
 
 
 </LinearLayout>

@@ -38,7 +38,7 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
 
         // 表示控件移动的最小距离，手移动的距离大于这个距离才能拖动控件
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        Log.e("qqq","====" + mScaledTouchSlop);
+        Log.e("qqq", "====" + mScaledTouchSlop);
     }
 
     private void initStyle() {
@@ -86,7 +86,7 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
             case MotionEvent.ACTION_DOWN:
                 // 移动的起点
                 mDownY = ev.getY();
-                Log.e("qqq","mDownY"+ev.getY());
+                Log.e("qqq", "mDownY" + ev.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 移动过程中判断时候能下拉加载更多
@@ -100,7 +100,7 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
             case MotionEvent.ACTION_UP:
                 // 移动的终点
                 mUpY = ev.getY();
-                Log.e("qqq","mUpY"+ev.getY());
+                Log.e("qqq", "mUpY" + ev.getY());
                 break;
         }
         return super.dispatchTouchEvent(ev);
@@ -114,8 +114,8 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
     private boolean canLoadMore() {
         // 1. 是上拉状态
         boolean condition1 = (mDownY - mUpY) >= mScaledTouchSlop;
-        if (condition1 ) {
-            Log.e("qqq","是上拉状态");
+        if (condition1) {
+            Log.e("qqq", "是上拉状态");
         }
 
         // 2. 当前页面可见的item是最后一个条目
@@ -125,21 +125,21 @@ public class SwipeRefreshView extends SwipeRefreshLayout {
         }
 
         if (condition2) {
-            Log.e("qqq","是最后一个条目");
+            Log.e("qqq", "是最后一个条目");
         }
         // 3. 正在加载状态
         boolean condition3 = !isLoading;
         if (condition3) {
-            Log.e("qqq","不是正在加载状态");
+            Log.e("qqq", "不是正在加载状态");
         }
-        return condition1 && condition2 && condition3 && mDownY>mUpY;
+        return condition1 && condition2 && condition3 && mDownY > mUpY;
     }
 
     /**
      * 处理加载数据的逻辑
      */
     private void loadData() {
-        Log.e("qqq","加载数据...");
+        Log.e("qqq", "加载数据...");
         if (mOnLoadListener != null) {
             // 设置加载状态，让布局显示出来
             setLoading(true);

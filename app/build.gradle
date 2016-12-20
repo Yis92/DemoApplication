@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
 repositories {
     jcenter()
     flatDir {
@@ -53,5 +59,7 @@ dependencies {
     //facebook图片加载库fresco
     compile files('libs/Baidu_MobAds_SDK.jar')
     compile files('libs/YoumiSdk_v6.4.4_2016-09-08.jar')
-    compile 'com.android.support:support-v4:25.0.1'
+//    compile 'com.android.support:support-v4:25.0.1'
+    //友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

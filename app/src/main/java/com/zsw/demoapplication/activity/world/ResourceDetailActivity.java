@@ -1,11 +1,11 @@
 package com.zsw.demoapplication.activity.world;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,7 +21,7 @@ import com.zsw.demoapplication.base.BaseActivity;
  * @date 2016/12/9
  * @Description:
  */
-public class VideoActivity extends BaseActivity {
+public class ResourceDetailActivity extends BaseActivity {
 
     private RelativeLayout rlBack;
     private WebView webview;
@@ -32,7 +32,7 @@ public class VideoActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_video);
+        super.onCreate(savedInstanceState, R.layout.activity_resource_detail);
     }
 
     //解决关闭activity仍有声音的bug
@@ -99,24 +99,16 @@ public class VideoActivity extends BaseActivity {
                 }
 
             });
-//
+
 //            webview.setWebViewClient(new WebViewClient() {
+//
 //                @Override
 //                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                    if(url.startsWith("http:") || url.startsWith("https:") ) {
-//                        showToast("111");
-//                        view.loadUrl(url);
-//                        return false;
-//                    }else{
-//                        showToast("2222");
-//
-//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//                        startActivity(intent);
-//                        return true;
-//                    }
+//                    webview.loadUrl(url);
+//                    return true;
 //                }
 //            });
-//            webview.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
+
             webview.loadUrl(url);
         }
     }
@@ -133,6 +125,6 @@ public class VideoActivity extends BaseActivity {
 
     @Override
     public Class<?> getClazz() {
-        return VideoActivity.class;
+        return ResourceDetailActivity.class;
     }
 }

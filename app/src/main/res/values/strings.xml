@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">DemoApplication</string>
+    <string name="app_name">美女资源视频</string>
     <string name="video_title">内 容</string>
     <string name="resource_title">资 源</string>
     <string name="load">加载中</string>
+
+    <string name="footer_type_loading">正在加载中…</string>
+    <string name="footer_type_error">加载失败</string>
+    <string name="footer_type_net_error">网络错误</string>
+    <string name="footer_type_not_more">没有更多数据</string>
 </resources>

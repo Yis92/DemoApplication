@@ -1,6 +1,9 @@
 package com.zsw.demoapplication.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +17,20 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobads.AdViewListener;
 import com.baidu.mobads.AppActivity;
 import com.zsw.demoapplication.R;
+import com.zsw.demoapplication.activity.world.ResourceDetailActivity;
+import com.zsw.demoapplication.activity.world.VideoActivity;
 import com.zsw.demoapplication.constant.Constant;
 import com.zsw.demoapplication.entity.NewsContent;
+import com.zsw.demoapplication.http.entity.IndexVideoTitleResp;
+
+import net.youmi.android.normal.banner.BannerManager;
+import net.youmi.android.normal.banner.BannerViewListener;
 
 import org.json.JSONObject;
 
 import java.util.List;
+
+import cn.trinea.android.common.adapter.CommonAdapter;
 
 /**
  * @author zeng
@@ -27,88 +38,46 @@ import java.util.List;
  * @Description:
  */
 
-public class ResourceListAdapter extends BaseAdapter {
-    private List<NewsContent> list;
-    private LayoutInflater mInflater;
-    private Context context;
+public class ResourceListAdapter extends CommonAdapter<IndexVideoTitleResp> {
 
+    private TextView tvTitle;
+    private LinearLayout llContent;
 
-    public ResourceListAdapter(List<NewsContent> list, Context context) {
-        this.list = list;
-        this.context = context;
-        this.mInflater = LayoutInflater.from(context);
+    public ResourceListAdapter(Activity activity, List<IndexVideoTitleResp> list) {
+        super(activity, list);
     }
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = null;
-        if (convertView != null) {
-            view = convertView;
-        } else {
-            view = mInflater.inflate(R.layout.item_resource, parent, false);
+        if (convertView == null) {
+            convertView = layoutInflater.inflate(R.layout.item_news, parent, false);
         }
-        TextView textView = (TextView) view.findViewById(R.id.news_title);
-        textView.setText(list.get(position).getTitle());
-        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ads);
-        initAds(linearLayout);
-        return view;
-    }
-    private void initAds(LinearLayout view) {
-        //创建广告view
-        //重要：请填上你的代码位ID,否则无法请求到广告
-        AdView adView= new AdView(context, Constant.BAIDU_ADPLACEID);
 
-        //设置监听器
-        adView.setListener(new AdViewListener() {
+        tvTitle = get(convertView, R.id.news_title);
+        llContent = get(convertView, R.id.ll_content);
+        if (list.get(position) == null) {
+            //表示这里插入一条广告
+            llContent.setBackgroundColor(getRes().getColor(R.color.red));
+//            setupBannerAd(llContent);
+        } else {
+            tvTitle.setVisibility(View.VISIBLE);
+            String title = list.get(position).getCoTitle();
+            tvTitle.setText(title);
+        }
+
+        llContent.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAdReady(AdView adView) {
-
+            public void onClick(View v) {
+                if (list.get(position) != null && isNotEmpty(list.get(position).getCoUrl())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", list.get(position).getCoUrl());
+                    startActivity(ResourceDetailActivity.class, bundle);
+                } else {
+//                    showToast("这是广告。。");
+                }
             }
-
-            @Override
-            public void onAdShow(JSONObject jsonObject) {
-
-            }
-
-            @Override
-            public void onAdClick(JSONObject jsonObject) {
-
-            }
-
-            @Override
-            public void onAdFailed(String s) {
-
-            }
-
-            @Override
-            public void onAdSwitch() {
-
-            }
-
-            @Override
-            public void onAdClose(JSONObject jsonObject) {
-
-            }
-
         });
-        //将adView添加到父控件中（注：该父控件丌一定为您癿根控件，只要该控件能通过addView添加广告视图即可）
-        RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        rllp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        view.addView(adView, rllp);
+        return convertView;
     }
 }

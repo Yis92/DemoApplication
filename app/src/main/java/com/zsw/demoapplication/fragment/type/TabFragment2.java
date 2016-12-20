@@ -21,6 +21,7 @@ import com.zsw.demoapplication.entity.NewsContent;
 import com.zsw.demoapplication.http.HttpConstant;
 import com.zsw.demoapplication.http.HttpManager;
 import com.zsw.demoapplication.http.entity.IndexVideoTitleResp;
+import com.zsw.demoapplication.widget.SuperRefreshLayout;
 import com.zsw.demoapplication.widget.SwipeRefreshView;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class TabFragment2 extends BaseFragment {
 
     private String title;
 
-    private SwipeRefreshView mRefreshLayout;
+    private SuperRefreshLayout mRefreshLayout;
     private LinkedList<IndexVideoTitleResp> list = new LinkedList();
     private MyListAdapter myListAdapter;
     private ListView listview;
@@ -46,7 +47,7 @@ public class TabFragment2 extends BaseFragment {
     private static final int FIRST = 100;
     private static final int REFRESH = 101;
     private static final int LOAD = 102;
-    private final int pageSize = 20;//20条数据一页
+    private final int pageSize = 15;//20条数据一页
     private int pageNo = 1;//第几页（页码）
 
 
@@ -92,6 +93,13 @@ public class TabFragment2 extends BaseFragment {
         //获取导航栏的参数
         bundle = getArguments();
         type = bundle.getInt("type");
+        //防止切换fragment被回收,pageNo停留在上拉加载的页数
+        pageNo = 1;
+
+        mRefreshLayout.setColorSchemeResources(
+                R.color.swiperefresh_color1, R.color.swiperefresh_color2,
+                R.color.swiperefresh_color3, R.color.swiperefresh_color4);
+
         httpVideoTitle(type, FIRST);
 
 //        String url = "";
@@ -114,10 +122,11 @@ public class TabFragment2 extends BaseFragment {
 
     @Override
     public void initEvents() {
+
         // 下拉时触发SwipeRefreshLayout的下拉动画，动画完毕之后就会回调这个方法
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mRefreshLayout.setSuperRefreshLayoutListener(new SuperRefreshLayout.SuperRefreshLayoutListener() {
             @Override
-            public void onRefresh() {
+            public void onRefreshing() {
                 // 开始刷新，设置当前为刷新状态
                 // 这里是主线程
                 // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
@@ -125,15 +134,26 @@ public class TabFragment2 extends BaseFragment {
                 pageNo = 1;
                 httpVideoTitle(type, REFRESH);
             }
-        });
-        // 设置上拉加载更多
-        mRefreshLayout.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
+
             @Override
-            public void onLoad() {
+            public void onLoadMore() {
                 pageNo++;
                 httpVideoTitle(type, LOAD);
             }
         });
+
+//        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//
+//            }
+//        });
+//        // 设置上拉加载更多
+//        mRefreshLayout.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
+//            @Override
+//            public void onLoad() {
+//            }
+//        });
     }
 
 //    private void initWebData(String url) {
@@ -236,30 +256,46 @@ public class TabFragment2 extends BaseFragment {
             public void onResponse(final IndexVideoTitleResp response) {
                 if (response.getCode() == 0) {
 
-                    switch (requestType) {
-                        case FIRST:
-                            list.addAll(response.getData());
-                            myListAdapter = new MyListAdapter(getActivity(), list);
-                            listview.setAdapter(myListAdapter);
-                            break;
-                        case REFRESH:
-                            list.clear();
-                            list.addAll(response.getData());
-                            myListAdapter.notifyDataSetChanged();
-                            mRefreshLayout.setRefreshing(false);
-                            break;
-                        case LOAD:
-                            Log.e("qqq",pageNo +"");
-                            if(response.getData()==null||response.getData().size()==0){
-                                Toast.makeText(activity,"没有更多啦",Toast.LENGTH_SHORT).show();
-                            }else{
+                    if (response.getData() != null && response.getData().size() > 0) {
+                        switch (requestType) {
+                            case FIRST:
+                                list.clear();
+                                list.addAll(response.getData());
+                                myListAdapter = new MyListAdapter(getActivity(), list);
+                                listview.setAdapter(myListAdapter);
+                                if (response.getData().size() >= pageSize) {
+                                    mRefreshLayout.setCanLoadMore(listview);//是否可以加载更多
+                                }
+                                mRefreshLayout.onLoadComplete();
+                                break;
+                            case REFRESH:
+                                list.clear();
                                 list.addAll(response.getData());
                                 myListAdapter.notifyDataSetChanged();
-                            }
-                            mRefreshLayout.setLoading(false);
-                            break;
+//                                mRefreshLayout.setRefreshing(false);
+                                mRefreshLayout.onLoadComplete();
+                                break;
+                            case LOAD:
+                                Log.e("qqq", pageNo + "");
+                                if (response.getData() == null || response.getData().size() == 0) {
+                                    mRefreshLayout.setFooterType(4);
+                                    Toast.makeText(activity, "没有更多啦", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    list.addAll(response.getData());
+                                    myListAdapter.notifyDataSetChanged();
+                                }
+                                mRefreshLayout.onLoadComplete();
+//                                mRefreshLayout.setRefreshing(false);
+//                                mRefreshLayout.setLoading(false);
+                                break;
+                        }
+                    } else {
+                        if (pageNo > 1) {
+                            mRefreshLayout.setFooterType(4);
+                        }
+                        mRefreshLayout.onLoadComplete();
+//                        mRefreshLayout.setRefreshing(false);
                     }
-
                 }
             }
         }, map);
